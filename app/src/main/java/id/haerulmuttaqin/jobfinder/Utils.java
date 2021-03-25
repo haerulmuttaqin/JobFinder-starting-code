@@ -130,7 +130,8 @@ public final class Utils {
 
     public static String dateFormatter(String Date) {
         if (Date != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+//            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",Locale.US);
             java.util.Date value = null;
             try {
                 value = formatter.parse(Date);

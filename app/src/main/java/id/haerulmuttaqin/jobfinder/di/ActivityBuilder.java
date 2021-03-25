@@ -6,5 +6,6 @@ import id.haerulmuttaqin.jobfinder.ui.MainActivity;
 
 @Module
 public abstract class ActivityBuilder {
-    
+    @ContributesAndroidInjector
+    abstract MainActivity mainActivity();
 }

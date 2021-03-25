@@ -10,6 +10,7 @@ import id.haerulmuttaqin.jobfinder.App;
 import id.haerulmuttaqin.jobfinder.Constants;
 import id.haerulmuttaqin.jobfinder.data.api.ApiInterface;
 import id.haerulmuttaqin.jobfinder.data.api.ConnectionServer;
+import id.haerulmuttaqin.jobfinder.data.storage.GithubJobRepository;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,7 +34,7 @@ public class AppModule {
     }
 
     @Provides @Singleton
-    OkHttpClient provideOkHttp(App application) {
+    OkHttpClient provideOkHttp() {
         return new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
@@ -50,9 +51,9 @@ public class AppModule {
     }
 
     @Provides @Singleton
-    Retrofit provideRetrofitClient(App application) {
+    Retrofit provideRetrofitClient() {
         return new Retrofit.Builder().baseUrl(Constants.BASE_URL)
-                .client(provideOkHttp(application))
+                .client(provideOkHttp())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
@@ -60,5 +61,10 @@ public class AppModule {
     @Provides @Singleton
     ApiInterface provideApiInterface(Retrofit retrofit) {
         return retrofit.create(ApiInterface.class);
+    }
+
+    @Provides @Singleton
+    GithubJobRepository provideRepository(App application) {
+        return GithubJobRepository.getInstance(application);
     }
 }
