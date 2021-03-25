@@ -20,7 +20,15 @@ public class ConnectionServer {
         return apiInterface.getJobList();
     }
 
+    public Call<List<GithubJob>> getJobListByPage(int page) {
+        return apiInterface.getJobList(page);
+    }
+
     public Call<List<GithubJob>> searchJobList(String keyword) {
         return apiInterface.searchJobList(keyword);
+    }
+
+    public Call<List<GithubJob>> searchJobListByPage(int page, String keyword) {
+        return apiInterface.searchJobList(page, keyword);
     }
 }

@@ -97,6 +97,9 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_marginBottom="60dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground"
                             app:strokeWidth="0.3dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="0dp"
@@ -182,6 +185,22 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/medium"/>
 
+                        <TextView
+                            android:id="@+id/showAllMarked"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="Show all"
+                            android:textSize="14dp"
+                            android:textColor="@color/gray_300"
+                            android:layout_marginStart="21dp"
+                            android:layout_marginEnd="21dp"
+                            android:layout_marginTop="25dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="@font/book"/>
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerViewMarked"
                             android:layout_width="match_parent"
@@ -206,14 +225,31 @@
                             android:layout_below="@id/recyclerViewMarked"
                             android:fontFamily="@font/medium"/>
 
+                        <TextView
+                            android:id="@+id/showAllRecommended"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="Show all"
+                            android:textSize="14dp"
+                            android:textColor="@color/gray_300"
+                            android:layout_marginStart="21dp"
+                            android:layout_marginEnd="21dp"
+                            android:layout_marginTop="25dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@id/recyclerViewMarked"
+                            android:fontFamily="@font/book"/>
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
-                            android:layout_marginBottom="10dp"
                             android:layout_below="@id/recommendedTitle"
+                            android:layout_marginBottom="20dp"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

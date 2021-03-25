@@ -2,15 +2,32 @@ package id.haerulmuttaqin.jobfinder.data.storage;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+import id.haerulmuttaqin.jobfinder.Utils;
+import id.haerulmuttaqin.jobfinder.data.api.ConnectionServer;
 import id.haerulmuttaqin.jobfinder.data.entity.GithubJob;
+import id.haerulmuttaqin.jobfinder.data.entity.NetworkState;
+import id.haerulmuttaqin.jobfinder.data.paging.GithubDataSourceFactory;
+import id.haerulmuttaqin.jobfinder.data.paging.GithubNetwork;
+import id.haerulmuttaqin.jobfinder.data.paging.LocalDataSourceFactory;
+import io.reactivex.schedulers.Schedulers;
+//import rx.schedulers.Schedulers;
 
 public class GithubJobRepository {
 
     private static GithubJobDatabase database;
     private static GithubJobRepository repository;
+
+    private static GithubNetwork network;
+    private MediatorLiveData githubMediatorLiveData;
+    private LiveData<PagedList<GithubJob>> pagedListLiveData;
 
     public GithubJobRepository(Context context) {
         database = GithubJobDatabase.getDatabase(context);
@@ -49,5 +66,52 @@ public class GithubJobRepository {
 
     public LiveData<List<GithubJob>> getLiveDataMarked() {
         return database.githubJobDao().getLiveDataMarked();
+    }
+
+
+    /*PAGING*/
+    public LiveData<PagedList<GithubJob>> getPagedListLiveData() {
+        return pagedListLiveData;
+    }
+
+    private PagedList.BoundaryCallback<GithubJob> boundaryCallback = new PagedList.BoundaryCallback<GithubJob>() {
+        @Override
+        public void onZeroItemsLoaded() {
+            super.onZeroItemsLoaded();
+            githubMediatorLiveData.addSource(getPagedListLiveData(), value -> {
+                githubMediatorLiveData.setValue(value);
+                githubMediatorLiveData.removeSource(getPagedListLiveData());
+            });
+        }
+    };
+
+    public void initPageDao(String keyword) {
+        PagedList.Config config = (new PagedList.Config.Builder()).setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(Integer.MAX_VALUE).setPageSize(Integer.MAX_VALUE).build();
+        Executor executor = Executors.newFixedThreadPool(3);
+        LocalDataSourceFactory localDataSourceFactory = new LocalDataSourceFactory(database.githubJobDao(), keyword);
+        LivePagedListBuilder livePagedListBuilder = new LivePagedListBuilder(localDataSourceFactory, config);
+        pagedListLiveData = livePagedListBuilder.setFetchExecutor(executor).build();
+    }
+
+    public LiveData<PagedList<GithubJob>> getDataByPage(ConnectionServer connectionServer, GithubJobRepository repository, String keyword) {
+        initPageDao(keyword);
+        GithubDataSourceFactory githubDataSourceFactory = new GithubDataSourceFactory(connectionServer, repository, keyword);
+        network = new GithubNetwork(githubDataSourceFactory, boundaryCallback);
+        githubMediatorLiveData = new MediatorLiveData<>();
+        githubMediatorLiveData.addSource(network.getPagedListLiveData(), value ->  {
+            githubMediatorLiveData.setValue(value);
+        });
+        githubDataSourceFactory.getData()
+                .observeOn(Schedulers.io())
+                .subscribe(item -> {
+                    item.createdAt = Utils.dateFormatter(item.createdAt);
+                    database.githubJobDao().insert(item);
+                });
+        return githubMediatorLiveData;
+    }
+
+    public LiveData<NetworkState> getNetworkState() {
+        return network.getNetworkStateLiveData();
     }
 }

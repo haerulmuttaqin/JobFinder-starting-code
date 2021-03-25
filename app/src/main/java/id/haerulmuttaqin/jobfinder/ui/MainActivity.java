@@ -73,11 +73,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         binding.cardSearch.setOnClickListener(v->{
             showDialogSearch();
         });
+        binding.showAllMarked.setOnClickListener(v-> {
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.putExtra("marked", "marked");
+            startActivity(intent);
+        });
+        binding.showAllRecommended.setOnClickListener(v-> {
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.putExtra("recommended", "recommended");
+            startActivity(intent);
+        });
     }
 
+
     private void showDialogSearch() {
-
-
         BottomFluxDialog.inputDialog(MainActivity.this)
                 .setTextTitle("Search")
                 .setTextMessage("What are you looking for?")
@@ -96,6 +105,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                     }
                 })
                 .show();
+//        View view = getLayoutInflater().inflate(R.layout.dialog_search, null);
+//        TextInputEditText m = view.findViewById(R.id.message);
+//        RelativeLayout btnSearch = view.findViewById(R.id.search);
+//
+//        BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.BottomSheetDialogStyle);
+//        btnSearch.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, ListActivity.class);
+//            intent.putExtra("search", m.getText().toString());
+//            startActivity(intent);
+//        });
+//        m.requestFocus();
+//
+//        dialog.setContentView(view);
+//        dialog.show();
     }
 
     @Override

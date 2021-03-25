@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import id.haerulmuttaqin.jobfinder.Utils;
 import id.haerulmuttaqin.jobfinder.base.BaseViewModel;
 import id.haerulmuttaqin.jobfinder.data.api.ConnectionServer;
 import id.haerulmuttaqin.jobfinder.data.entity.GithubJob;
+import id.haerulmuttaqin.jobfinder.data.entity.NetworkState;
 import id.haerulmuttaqin.jobfinder.data.storage.GithubJobRepository;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,10 +23,16 @@ import retrofit2.Response;
 
 public class MainViewModel extends BaseViewModel<MainViewModel.Navigator> {
 
-    MutableLiveData<List<GithubJob>> jobList = new MutableLiveData<>();
-
     public MainViewModel(Context context, ConnectionServer connectionServer, GithubJobRepository repository) {
         super(context, connectionServer, repository);
+    }
+
+    public LiveData<PagedList<GithubJob>> getPagedData(String keyword) {
+        return getRepository().getDataByPage(getConnectionServer(), getRepository(), keyword);
+    }
+
+    public LiveData<NetworkState> getNetworkState() {
+        return getRepository().getNetworkState();
     }
 
     public LiveData<List<GithubJob>> getLiveData() {

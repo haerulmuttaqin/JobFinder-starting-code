@@ -27,8 +27,11 @@ import id.haerulmuttaqin.jobfinder.ui.detail.DetailActivity;
 
 public class ListActivity extends BaseActivity<ActivityListBinding, MainViewModel> implements MainViewModel.Navigator {
 
-    @Inject GithubJobRepository repository;
-    @Inject ConnectionServer server;
+    @Inject
+    GithubJobRepository repository;
+    @Inject
+    ConnectionServer server;
+
     private ActivityListBinding binding;
     private MainViewModel viewModel;
 
@@ -56,18 +59,46 @@ public class ListActivity extends BaseActivity<ActivityListBinding, MainViewMode
                 new MainViewModel.ModelFactory(this, server, repository)
         ).get(MainViewModel.class);
         viewModel.setNavigator(this);
-        if (getIntent().getStringExtra("search") != null) {
+        if (getIntent().getStringExtra("recommended") != null) {
+            setupActionBar("Recommended Jobs");
+            getData(null);
+            binding.swipeRefresh.setOnRefreshListener(()->getData(null));
+        }
+        else if (getIntent().getStringExtra("search") != null) {
             String keyword = getIntent().getStringExtra("search");
             setupActionBar("Search Jobs (" + keyword + ")");
-            viewModel.searchJobFromServer(keyword);
-            binding.swipeRefresh.setOnRefreshListener(()->viewModel.searchJobFromServer(keyword));
-            viewModel.searchLiveData(keyword).observe(this, githubJobs -> {
-                binding.recyclerView.setAdapter(new MainAdapter(githubJobs, viewModel));
+            getData(keyword);
+            binding.swipeRefresh.setOnRefreshListener(()->getData(keyword));
+        }
+        else if (getIntent().getStringExtra("marked") != null) {
+            setupActionBar("Marked Jobs");
+            binding.swipeRefresh.setOnRefreshListener(null);
+            viewModel.getLiveDataMarked().observe(this, githubJobs -> {
+                hideProgress();
+                if (githubJobs.size() > 0) {
+                    binding.recyclerView.setAdapter(new MainAdapter(githubJobs, viewModel));
+                } else {
+                    binding.emptyView.setVisibility(View.VISIBLE);
+                    binding.textEmptyErr.setText("No job marked!");
+                }
             });
-        } else {
+        }
+        else {
             Toast.makeText(this, "Failed get list!", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void getData(String keyword) {
+        final ListPagedAdapter adapter = new ListPagedAdapter(viewModel);
+        viewModel.getPagedData(keyword).observe(this, githubJobs -> {
+            adapter.submitList(githubJobs);
+        });
+        viewModel.getNetworkState().observe(this, networkState -> {
+            adapter.setNetworkState(networkState);
+            binding.setState(networkState);
+        });
+        binding.recyclerView.setAdapter(adapter);
     }
 
     private void setupActionBar(String title) {

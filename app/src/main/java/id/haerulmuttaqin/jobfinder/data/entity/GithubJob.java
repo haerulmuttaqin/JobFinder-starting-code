@@ -1,6 +1,6 @@
 package id.haerulmuttaqin.jobfinder.data.entity;
-
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -65,4 +65,16 @@ public class GithubJob implements Serializable {
                 ", is_mark=" + is_mark +
                 '}';
     }
+
+    public static DiffUtil.ItemCallback<GithubJob> DIFF_CALLBACK = new DiffUtil.ItemCallback<GithubJob>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull GithubJob oldItem, @NonNull GithubJob newItem) {
+            return oldItem.id.equals(newItem.id);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull GithubJob oldItem, @NonNull GithubJob newItem) {
+            return oldItem.id.equals(newItem.id);
+        }
+    };
 }

@@ -67,6 +67,24 @@ dependencies {
     // room
     implementation 'androidx.room:room-runtime:2.2.6'
     annotationProcessor 'androidx.room:room-compiler:2.2.6'
+
+
+
+    def paging_version = "2.1.2"
+
+    implementation "androidx.paging:paging-runtime:$paging_version" // For Kotlin use paging-runtime-ktx
+
+//    // alternatively - without Android dependencies for testing
+//    testImplementation "androidx.paging:paging-common:$paging_version" // For Kotlin use paging-common-ktx
+//
+//    // optional - RxJava support
+//    implementation "androidx.paging:paging-rxjava2:$paging_version" // For Kotlin use paging-rxjava2-ktx
+
+    // rxjava
+    implementation 'io.reactivex:rxjava:1.2.7'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
     // other
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'

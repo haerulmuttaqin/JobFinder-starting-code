@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="item"
             type="id.haerulmuttaqin.jobfinder.data.entity.GithubJob" />
+        <variable
+            name="state"
+            type="id.haerulmuttaqin.jobfinder.data.entity.NetworkState" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -38,6 +43,7 @@
             android:background="@drawable/bg_rounded_top"
             android:fillViewport="true"
             android:fitsSystemWindows="true"
+            app:refreshing="@{state != null &amp;&amp; state.getStatus().equals(state.Status.FIRST_LOADING) ? true : false}"
             app:layout_anchor="@id/appbar"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -60,11 +66,10 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginTop="15dp"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 <LinearLayout
@@ -75,6 +80,7 @@
                     android:fillViewport="true"
                     android:clickable="false"
                     android:focusable="false"
+                    android:visibility="@{state != null &amp;&amp; state.getStatus().equals(state.Status.FIRST_FAILED) ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -103,6 +109,7 @@
                         android:paddingStart="16dp"
                         android:paddingBottom="16dp"
                         android:paddingEnd="16dp"
+                        android:text="@{state.msg}"
                         android:fontFamily="@font/book"/>
                 </LinearLayout>
 
@@ -112,6 +119,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_marginTop="16dp"
+                    android:visibility="@{state != null &amp;&amp; state.getStatus().equals(state.Status.FIRST_LOADING) ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:shimmer_duration="800"
                     app:shimmer_auto_start="true">
