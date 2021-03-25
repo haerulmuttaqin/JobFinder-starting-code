@@ -1,4 +1,5 @@
 package id.haerulmuttaqin.jobfinder.ui;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -14,8 +15,10 @@ import javax.inject.Inject;
 import id.haerulmuttaqin.jobfinder.R;
 import id.haerulmuttaqin.jobfinder.base.BaseActivity;
 import id.haerulmuttaqin.jobfinder.data.api.ConnectionServer;
+import id.haerulmuttaqin.jobfinder.data.entity.GithubJob;
 import id.haerulmuttaqin.jobfinder.data.storage.GithubJobRepository;
 import id.haerulmuttaqin.jobfinder.databinding.ActivityMainBinding;
+import id.haerulmuttaqin.jobfinder.ui.detail.DetailActivity;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements  MainViewModel.Navigator {
 
@@ -104,5 +107,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Override
     public void onMark(int mark, String title) {
         Snackbar.make(binding.getRoot(), mark == 0 ? "\uD83D\uDE13 Unmark " + title : "\uD83D\uDE0D Marked " + title, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(GithubJob githubJob) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("item", githubJob);
+        startActivity(intent);
     }
 }

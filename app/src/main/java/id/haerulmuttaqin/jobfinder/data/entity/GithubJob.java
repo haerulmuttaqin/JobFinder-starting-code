@@ -7,8 +7,10 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 @Entity
-public class GithubJob {
+public class GithubJob implements Serializable {
     @PrimaryKey
     @SerializedName("id")
     @Expose

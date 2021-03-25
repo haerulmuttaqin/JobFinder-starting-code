@@ -24,6 +24,7 @@
         app:strokeWidth="1dp">
 
         <LinearLayout
+            android:onClick="@{()->viewModel.onItemClick(item)}"
             android:orientation="vertical"
             android:clickable="true"
             android:focusable="true"

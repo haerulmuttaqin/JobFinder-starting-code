@@ -66,7 +66,9 @@ public class MainViewModel extends BaseViewModel<MainViewModel.Navigator> {
         getRepository().updateMarkJob(githubJob);
         getNavigator().onMark(githubJob.is_mark, githubJob.title);
     }
-
+    public void onItemClick(GithubJob githubJob){
+        getNavigator().onItemClick(githubJob);
+    }
     public static class ModelFactory implements ViewModelProvider.Factory {
         private Context context;
         private ConnectionServer server;
@@ -88,5 +90,6 @@ public class MainViewModel extends BaseViewModel<MainViewModel.Navigator> {
         void hideProgress();
         void onGetResult(boolean status, String message);
         void onMark(int mark, String title);
+        void onItemClick(GithubJob githubJob);
     }
 }
