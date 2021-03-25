@@ -29,7 +29,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
     private List<GithubJob> data;
     private MainViewModel viewModel;
 
-    protected MainAdapter(List<GithubJob> data, MainViewModel viewModel) {
+    public MainAdapter(List<GithubJob> data, MainViewModel viewModel) {
         this.data = data;
         this.viewModel = viewModel;
     }

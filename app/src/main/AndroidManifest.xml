@@ -14,9 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobFinder.NoActionBar">
         <activity
-
+            android:name=".ui.list.ListActivity"
+            android:theme="@style/Theme.JobFinder.NoActionBar" />
+        <activity
             android:name=".ui.detail.DetailActivity"
-            android:theme="@style/Theme.JobFinder.NoActionBar"/>
+            android:theme="@style/Theme.JobFinder.NoActionBar" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

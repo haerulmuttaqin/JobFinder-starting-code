@@ -31,6 +31,10 @@ public class MainViewModel extends BaseViewModel<MainViewModel.Navigator> {
         return getRepository().getLiveData();
     }
 
+    public LiveData<List<GithubJob>> searchLiveData(String keyword) {
+        return getRepository().searchLiveData(keyword.toLowerCase());
+    }
+
     public LiveData<List<GithubJob>> getLiveDataMarked() {
         return getRepository().getLiveDataMarked();
     }
@@ -62,13 +66,37 @@ public class MainViewModel extends BaseViewModel<MainViewModel.Navigator> {
         });
     }
 
+    public void searchJobFromServer(String keyword) {
+        getNavigator().showProgress();
+        getConnectionServer().searchJobList(keyword).enqueue(new Callback<List<GithubJob>>() {
+            @Override
+            public void onResponse(Call<List<GithubJob>> call, Response<List<GithubJob>> response) {
+                if (response.isSuccessful() && response.body().size() > 0) {
+                    for (GithubJob item : response.body()) {
+                        getRepository().insert(item);
+                    }
+                    getNavigator().onGetResult(true, "Success");
+                }
+                getNavigator().hideProgress();
+            }
+            @Override
+            public void onFailure(Call<List<GithubJob>> call, Throwable t) {
+                t.getLocalizedMessage();
+                getNavigator().hideProgress();
+                getNavigator().onGetResult(false, Utils.errorMessageHandler(call, t));
+            }
+        });
+    }
+
     public void markJob(GithubJob githubJob) {
         getRepository().updateMarkJob(githubJob);
         getNavigator().onMark(githubJob.is_mark, githubJob.title);
     }
-    public void onItemClick(GithubJob githubJob){
+
+    public void itemClick(GithubJob githubJob) {
         getNavigator().onItemClick(githubJob);
     }
+
     public static class ModelFactory implements ViewModelProvider.Factory {
         private Context context;
         private ConnectionServer server;
@@ -85,7 +113,7 @@ public class MainViewModel extends BaseViewModel<MainViewModel.Navigator> {
         }
     }
 
-    interface Navigator {
+    public interface Navigator {
         void showProgress();
         void hideProgress();
         void onGetResult(boolean status, String message);

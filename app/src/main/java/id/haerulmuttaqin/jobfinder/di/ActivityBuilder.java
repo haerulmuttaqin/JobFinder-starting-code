@@ -1,5 +1,7 @@
 package id.haerulmuttaqin.jobfinder.di;
 
+import android.app.ListActivity;
+
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import id.haerulmuttaqin.jobfinder.ui.MainActivity;
@@ -12,5 +14,8 @@ public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     abstract DetailActivity detailActivity();
+
+    @ContributesAndroidInjector
+    abstract ListActivity listActivity();
 
 }

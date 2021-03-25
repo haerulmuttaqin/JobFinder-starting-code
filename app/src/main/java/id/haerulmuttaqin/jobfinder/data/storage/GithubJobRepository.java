@@ -34,8 +34,17 @@ public class GithubJobRepository {
         }
     }
 
+    public GithubJob getById(String id) {
+        return database.githubJobDao().getDataById(id);
+    }
+
     public LiveData<List<GithubJob>> getLiveData() {
         return database.githubJobDao().getLiveData();
+    }
+
+    public LiveData<List<GithubJob>> searchLiveData(String keyword) {
+        keyword = "%" + keyword + "%";
+        return database.githubJobDao().searchLiveData(keyword);
     }
 
     public LiveData<List<GithubJob>> getLiveDataMarked() {

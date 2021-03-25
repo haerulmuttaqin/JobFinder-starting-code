@@ -2,13 +2,19 @@ package id.haerulmuttaqin.jobfinder.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.haerul.bottomfluxdialog.BottomFluxDialog;
 
 import javax.inject.Inject;
 
@@ -19,6 +25,7 @@ import id.haerulmuttaqin.jobfinder.data.entity.GithubJob;
 import id.haerulmuttaqin.jobfinder.data.storage.GithubJobRepository;
 import id.haerulmuttaqin.jobfinder.databinding.ActivityMainBinding;
 import id.haerulmuttaqin.jobfinder.ui.detail.DetailActivity;
+import id.haerulmuttaqin.jobfinder.ui.list.ListActivity;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements  MainViewModel.Navigator {
 
@@ -43,22 +50,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
-
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = getViewDataBinding();
         viewModel = new ViewModelProvider(this, new MainViewModel.ModelFactory(this, server, repository)).get(MainViewModel.class);
         viewModel.setNavigator(this);
         viewModel.getJobFromServer();
-
-        Log.e("MainActivity=>","ONCREATE");
-
         viewModel.getLiveData().observe(this, githubJobs -> {
             binding.recyclerView.setAdapter(new MainAdapter(githubJobs, viewModel));
         });
@@ -72,8 +69,33 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
                 binding.recyclerViewMarked.setVisibility(View.GONE);
             }
         });
-
         binding.swipeRefresh.setOnRefreshListener(()->viewModel.getJobFromServer());
+        binding.cardSearch.setOnClickListener(v->{
+            showDialogSearch();
+        });
+    }
+
+    private void showDialogSearch() {
+
+
+        BottomFluxDialog.inputDialog(MainActivity.this)
+                .setTextTitle("Search")
+                .setTextMessage("What are you looking for?")
+                .setRightButtonText("SUBMIT")
+                .setInputListener(new BottomFluxDialog.OnInputListener() {
+                    @Override
+                    public void onSubmitInput(String text) {
+                        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                        intent.putExtra("search", text);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelInput() {
+
+                    }
+                })
+                .show();
     }
 
     @Override

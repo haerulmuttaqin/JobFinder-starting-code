@@ -11,13 +11,16 @@ public class ConnectionServer {
 
     @Inject
     ApiInterface apiInterface;
-    
+
     public ConnectionServer(ApiInterface apiInterface) {
         this.apiInterface = apiInterface;
     }
 
-    public Call<List<GithubJob>> getJobList(){
+    public Call<List<GithubJob>> getJobList() {
         return apiInterface.getJobList();
     }
 
+    public Call<List<GithubJob>> searchJobList(String keyword) {
+        return apiInterface.searchJobList(keyword);
+    }
 }
