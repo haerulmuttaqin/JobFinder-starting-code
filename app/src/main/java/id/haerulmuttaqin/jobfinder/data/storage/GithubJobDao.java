@@ -9,6 +9,7 @@ import androidx.room.Query;
 import java.util.List;
 
 import id.haerulmuttaqin.jobfinder.data.entity.GithubJob;
+import io.reactivex.Flowable;
 
 @Dao
 public interface GithubJobDao {
@@ -16,8 +17,9 @@ public interface GithubJobDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(GithubJob githubJob);
 
-    @Query("SELECT * FROM githubjob ORDER BY createdAt DESC LIMIT 10")
-    LiveData<List<GithubJob>> getLiveData();
+    @Query("SELECT * FROM GithubJob ORDER BY createdAt DESC LIMIT 10")
+//    LiveData<List<GithubJob>> getLiveData();
+    Flowable<List<GithubJob>> getLiveData();
 
     @Query("SELECT * FROM githubjob ORDER BY createdAt DESC")
     List<GithubJob> getList();
@@ -32,6 +34,7 @@ public interface GithubJobDao {
     LiveData<List<GithubJob>> getLiveDataMarked();
 
     @Query("SELECT * FROM githubjob where id = :id")
-    GithubJob getDataById(String id);
+//    GithubJob getDataById(String id);
+    Flowable<GithubJob> getDataById(String id);
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="viewModel"
@@ -203,9 +204,11 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerViewMarked"
+                            tools:itemCount="2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
+                            tools:listitem="@layout/item_job_marked"
                             android:layout_marginBottom="10dp"
                             android:layout_below="@id/markedTitle"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -231,7 +234,7 @@
                             android:focusable="true"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:text="Show all"
-                            android:textSize="14dp"
+                            android:textSize="14sp"
                             android:textColor="@color/gray_300"
                             android:layout_marginStart="21dp"
                             android:layout_marginEnd="21dp"
@@ -244,10 +247,12 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerView"
+                            tools:itemCount="3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
+                            tools:listitem="@layout/item_job"
                             android:layout_below="@id/recommendedTitle"
                             android:layout_marginBottom="20dp"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -285,6 +290,7 @@
 
                 <LinearLayout
                     android:id="@+id/emptyView"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"

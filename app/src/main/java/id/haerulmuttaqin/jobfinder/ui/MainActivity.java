@@ -1,20 +1,17 @@
 package id.haerulmuttaqin.jobfinder.ui;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import com.haerul.bottomfluxdialog.BottomFluxDialog;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,6 +23,11 @@ import id.haerulmuttaqin.jobfinder.data.storage.GithubJobRepository;
 import id.haerulmuttaqin.jobfinder.databinding.ActivityMainBinding;
 import id.haerulmuttaqin.jobfinder.ui.detail.DetailActivity;
 import id.haerulmuttaqin.jobfinder.ui.list.ListActivity;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements  MainViewModel.Navigator {
 
@@ -33,7 +35,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Inject GithubJobRepository repository;
     private ActivityMainBinding binding;
     private MainViewModel viewModel;
-
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     public int getBindingVariable() {
         return 0;
@@ -56,9 +58,22 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         viewModel = new ViewModelProvider(this, new MainViewModel.ModelFactory(this, server, repository)).get(MainViewModel.class);
         viewModel.setNavigator(this);
         viewModel.getJobFromServer();
-        viewModel.getLiveData().observe(this, githubJobs -> {
-            binding.recyclerView.setAdapter(new MainAdapter(githubJobs, viewModel));
-        });
+//        viewModel.getLiveData().observe(this, githubJobs -> {
+//            binding.recyclerView.setAdapter(new MainAdapter(githubJobs, viewModel));
+//        });
+
+        Disposable disposable = viewModel.getLiveData().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<GithubJob>>() {
+                    @Override
+                    public void accept(List<GithubJob> githubJobs) throws Exception {
+                        Log.d(TAG, "accept: getAllMovies");
+                        binding.recyclerView.setAdapter(new MainAdapter(githubJobs, viewModel));
+                    }
+                });
+
+        compositeDisposable.add(disposable);
+
         viewModel.getLiveDataMarked().observe(this, githubJobs -> {
             if (githubJobs.size() > 0) {
                 binding.markedTitle.setVisibility(View.VISIBLE);
