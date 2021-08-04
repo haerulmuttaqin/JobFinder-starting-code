@@ -27,13 +27,21 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    dataBinding {
-        enabled = true
+//    dataBinding {
+//        enabled = true
+//    }
+    buildFeatures{
+        dataBinding=true;
     }
 }
 
 dependencies {
+    def room_version = "2.2.6"
+
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -58,6 +66,30 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.9.0") {
         exclude group: "com.android.support"
     }
+    // room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+
+
+    def paging_version = "2.1.2"
+
+    implementation "androidx.paging:paging-runtime:$paging_version" // For Kotlin use paging-runtime-ktx
+
+//    // alternatively - without Android dependencies for testing
+//    testImplementation "androidx.paging:paging-common:$paging_version" // For Kotlin use paging-common-ktx
+//
+//    // optional - RxJava support
+//    implementation "androidx.paging:paging-rxjava2:$paging_version" // For Kotlin use paging-rxjava2-ktx
+
+    // rxjava
+    implementation 'io.reactivex:rxjava:1.2.7'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+// optional - RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
     // other
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
@@ -65,7 +97,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.4'
     implementation 'com.xeoh.android:text-highlighter:1.0.3'
     implementation 'com.airbnb.android:lottie:3.4.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'com.github.haerulmuttaqin:BottomFluxDialog:0.1.1'
+
 }

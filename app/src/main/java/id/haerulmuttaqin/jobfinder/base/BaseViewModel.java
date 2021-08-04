@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import java.lang.ref.WeakReference;
 
 import id.haerulmuttaqin.jobfinder.data.api.ConnectionServer;
+import id.haerulmuttaqin.jobfinder.data.storage.GithubJobRepository;
 
 public abstract class BaseViewModel<N> extends ViewModel {
 
@@ -24,10 +25,12 @@ public abstract class BaseViewModel<N> extends ViewModel {
     private WeakReference<N> navigator;
    
     private ConnectionServer connectionServer;
+    private GithubJobRepository repository;
 
-    public BaseViewModel(Context context, ConnectionServer connectionServer) {
+    public BaseViewModel(Context context, ConnectionServer connectionServer, GithubJobRepository repository) {
         this.context = context;
         this.connectionServer = connectionServer;
+        this.repository = repository;
     }
 
     public BaseViewModel(Context context) {
@@ -69,6 +72,9 @@ public abstract class BaseViewModel<N> extends ViewModel {
 
     public ConnectionServer getConnectionServer() {
         return connectionServer;
+    }
+    public GithubJobRepository getRepository() {
+        return repository;
     }
 
     public ObservableBoolean getIsNetworkProblem() {
