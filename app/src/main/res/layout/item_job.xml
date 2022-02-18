@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="item"
+            type="id.haerulmuttaqin.jobfinder.data.entity.GithubJob" />
+        <variable
+            name="viewModel"
+            type="id.haerulmuttaqin.jobfinder.ui.MainViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#F1F1F1"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:onClick="@{()->viewModel.itemClick(item)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="9dp"
+                android:padding="4dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/photoPreviewLayout"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/ic_photo"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#F1F1F1"
+                    app:strokeWidth="0.5dp">
+                    <ImageView
+                        android:id="@+id/photoPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:layout_margin="5dp"/>
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/progress"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:shimmer_auto_start="true"
+                        app:shimmer_duration="800">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:background="@color/gray_100"/>
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_toEndOf="@id/photoPreviewLayout">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{item.title}"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="@color/gray_500"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="35dp"
+                        android:fontFamily="@font/bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp">
+                        <ImageView
+                            android:id="@+id/iconCompany"
+                            android:layout_width="15dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/ic_round_business_24"
+                            app:tint="@color/gray_300"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/iconCompany"
+                            android:text="@{item.company}"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray_400"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/book"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp">
+
+                        <ImageView
+                            android:id="@+id/iconLocation"
+                            android:layout_width="15dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/ic_outline_location_on_24"
+                            app:tint="@color/gray_300"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/iconLocation"
+                            android:text="@{item.location}"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray_400"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/book"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{item.type}"
+                            android:textSize="10sp"
+                            android:textColor="@color/green_200"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/book"
+                            android:background="@drawable/bg_job_type"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.formatDate(item.createdAt)}"
+                            android:textSize="10sp"
+                            android:layout_alignParentEnd="true"
+                            android:textColor="@color/gray_300"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/book"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/mark"
+                    android:onClick="@{()->viewModel.markJob(item)}"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_width="30dp"
+                    android:layout_height="40dp"
+                    android:src="@{item.is_mark == 1 ? @drawable/ic_marked : @drawable/ic_mark}"
+                    android:layout_alignParentEnd="true"
+                    android:padding="3dp"
+                    app:tint="@color/gray_200"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>
